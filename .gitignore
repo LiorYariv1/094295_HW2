@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+.idea/deployment.xml
+*.xml
+.idea/094295_HW2.iml
