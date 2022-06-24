@@ -272,7 +272,6 @@ def save_checkpoint(gen_model, dsc_losses, gen_losses, checkpoint_file):
     :param checkpoint_file: Path without extension to save generator to.
     """
 
-    saved = False
     checkpoint_file = f"{checkpoint_file}.pt"
 
     # TODO:
@@ -280,9 +279,8 @@ def save_checkpoint(gen_model, dsc_losses, gen_losses, checkpoint_file):
     #  You should decide what logic to use for deciding when to save.
     #  If you save, set saved to True.
     # ====== YOUR CODE: ======
-    if torch.tensor(dsc_losses[-1]) + torch.tensor(gen_losses[-1]) / 4 == torch.min(torch.tensor(dsc_losses) + torch.tensor(gen_losses) / 4):
-        torch.save(gen_model, checkpoint_file)
-        saved = True
+    torch.save(gen_model, checkpoint_file)
+    saved = True
     # raise NotImplementedError()
     # ========================
     return saved
