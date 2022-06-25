@@ -22,7 +22,8 @@ def rearrange(dir, img_name, op):
 
 if __name__ == "__main__":
     print('starting')
+    # shutil.copytree('/home/student/HW2/data_orig', '/home/student/HW2/data_noaug')
     df = pd.read_csv('fixes.csv')
-    os.mkdir('data/maybe')
+    os.mkdir('data_noaug/maybe')
     for _, row in df.iterrows():
-        rearrange(row['path'][2:], row['img'],row['dest'][2:])
+        rearrange(row['path'][2:].replace('data','data_noaug'), row['img'],row['dest'][2:].replace('data','data_noaug'))

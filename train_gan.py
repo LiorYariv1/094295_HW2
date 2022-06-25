@@ -51,7 +51,7 @@ class CustomDataSet(Dataset):
         return tensor_image,1
 
 #%%
-dataset_dir = '/home/student/HW2/data/train/vi'
+dataset_dir = '/home/student/HW2/data/train/iv'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using device:', device)
 tf = T.Compose([
