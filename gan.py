@@ -273,14 +273,16 @@ def save_checkpoint(gen_model, dsc_losses, gen_losses, checkpoint_file):
     """
 
     checkpoint_file = f"{checkpoint_file}.pt"
+    saved=False
 
     # TODO:
     #  Save a checkpoint of the generator model. You can use torch.save().
     #  You should decide what logic to use for deciding when to save.
     #  If you save, set saved to True.
     # ====== YOUR CODE: ======
-    torch.save(gen_model, checkpoint_file)
-    saved = True
+    if torch.tensor(dsc_losses[-1]) + 2*torch.tensor(gen_losses[-1]) / 3 == torch.min(torch.tensor(dsc_losses) + 2*torch.tensor(gen_losses) / 3):
+        torch.save(gen_model, checkpoint_file)
+        saved = True
     # raise NotImplementedError()
     # ========================
     return saved

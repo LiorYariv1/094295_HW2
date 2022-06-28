@@ -37,8 +37,8 @@ NUM_EPOCHS = 100
 LR = 0.001
 
 # Paths to your train and val directories
-train_dir = os.path.join("data_noaug", "train")
-val_dir = os.path.join("data_noaug", "val")
+train_dir = os.path.join("data", "train")
+val_dir = os.path.join("data", "val")
 
 
 def imshow(inp, title=None):

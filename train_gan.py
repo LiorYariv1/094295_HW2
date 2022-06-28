@@ -17,6 +17,8 @@ import IPython.display
 import tqdm
 import cs236781.plot as plot
 from PIL import Image
+from torchvision.utils import save_image
+
 
 # Optimizer
 def create_optimizer(model_params, opt_params):
@@ -51,7 +53,8 @@ class CustomDataSet(Dataset):
         return tensor_image,1
 
 #%%
-dataset_dir = '/home/student/HW2/data/train/iv'
+LETTER = 'ix'
+dataset_dir = f'/home/student/HW2/data/train/{LETTER}'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print('Using device:', device)
 tf = T.Compose([
@@ -63,7 +66,6 @@ tf = T.Compose([
 ])
 # ds_gwb = ImageFolder(os.path.dirname(dataset_dir), tf)
 ds_gwb = CustomDataSet(dataset_dir, tf)
-
 x0, y0 = ds_gwb[0]
 #%%
 
@@ -88,20 +90,13 @@ gen_optimizer = create_optimizer(gen.parameters(), hp['generator_optimizer'])
 #%%
 
 # Training
-checkpoint_file = 'checkpoints/gan'
+checkpoint_file = f'checkpoints/gan/{LETTER}/'
 os.makedirs(checkpoint_file,exist_ok=True)
 checkpoint_file_final = f'{checkpoint_file}_final'
 if os.path.isfile(f'{checkpoint_file}.pt'):
     os.remove(f'{checkpoint_file}.pt')
 
 num_epochs = 100
-
-if os.path.isfile(f'{checkpoint_file_final}.pt'):
-    print(f'*** Loading final checkpoint file {checkpoint_file_final} instead of training')
-    num_epochs = 0
-    gen = torch.load(f'{checkpoint_file_final}.pt', map_location=device, )
-    checkpoint_file = checkpoint_file_final
-
 try:
     dsc_avg_losses, gen_avg_losses = [], []
     for epoch_idx in range(num_epochs):
@@ -126,7 +121,8 @@ try:
         print(f'Discriminator loss: {dsc_avg_losses[-1]}')
         print(f'Generator loss:     {gen_avg_losses[-1]}')
 
-        if save_checkpoint(gen, dsc_avg_losses, gen_avg_losses, checkpoint_file):
+        if save_checkpoint(gen, dsc_avg_losses, gen_avg_losses, checkpoint_file+str(epoch_idx)):
+            best_model = epoch_idx
             print(f'Saved checkpoint.')
 
         samples = gen.sample(5, with_grad=False)
@@ -135,4 +131,16 @@ try:
         plt.show()
 except KeyboardInterrupt as e:
     print('\n *** Training interrupted by user')
-    # %%
+# %%
+
+## CODE TO GENERATE AND SAVE IMAGES from best model
+
+number_of_images = 100
+print(f'*** Loading final checkpoint file from epoch {best_model}')
+gen = torch.load(f'{checkpoint_file}{best_model}.pt', map_location=device, )
+samples = gen.sample(number_of_images, with_grad=False)
+
+images_path = f'Images/{LETTER}'
+os.makedirs(images_path)
+for i,sample in enumerate(samples):
+    save_image(sample, f'{images_path}/img{i}.png')
