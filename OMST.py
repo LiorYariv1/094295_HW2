@@ -1,0 +1,1 @@
+print('OMST hatich shel yeled!')

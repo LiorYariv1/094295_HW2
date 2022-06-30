@@ -1,0 +1,17 @@
+method: bayes
+metric:
+  goal: maximize
+  name: best_val_acc
+parameters:
+  gan_pct:
+    distribution: uniform
+    max: 1.0
+    min: 0.0
+  flip_pct:
+    distribution: uniform
+    max: 1.0
+    min: 0.0
+program: training_hp.py
+project: Lab2
+
+
