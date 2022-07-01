@@ -30,7 +30,7 @@ def augment_digit(cur_digit, path):
             # image = Image.open(image_path)
             image = io.imread(image_path) # reading the image using its path
 
-            print('Rotated Image')
+            # print('Rotated Image')
             # apply rotate operation
             max_rotate = 10
             ang = np.random.uniform(low=-max_rotate, high=max_rotate, size=(1)).astype(float)[0]
@@ -38,14 +38,18 @@ def augment_digit(cur_digit, path):
             rotated = rotate(image, angle=ang, mode='wrap')
 
             # apply shift operation
-            max_shift = 3.6
-            up = np.random.uniform(low=-max_shift, high=max_shift, size=(1)).astype(float)[0]
-            left = np.random.uniform(low=-max_shift, high=max_shift, size=(1)).astype(float)[0]
-            # print(f'up {up},  left {left}')
-            transform = AffineTransform(translation=(up, left))
-            wrapShift = warp(rotated, transform, mode='wrap')
-
-            plt.imsave(os.path.join(dest_path, image_name.split('.png')[0] + '_shift.png'), wrapShift)
+            for m1, m2 in [(1,1),(1,-1),(-1,1),(-1,-1)]:
+                max_shift = 3.6
+                up_high = max(0, m1*max_shift)
+                up_low = min(0, m1*max_shift)
+                up = np.random.uniform(low=up_low, high=up_high, size=(1)).astype(float)[0]
+                left_high = max(0, m2*max_shift)
+                left_low = min(0, m2*max_shift)
+                left = np.random.uniform(low=left_low, high=left_high, size=(1)).astype(float)[0]
+                # print(f'up {up},  left {left}')
+                transform = AffineTransform(translation=(up, left))
+                wrapShift = warp(rotated, transform, mode='wrap')
+                plt.imsave(os.path.join(dest_path, image_name.split('.png')[0] + f'_shift_{str(m1),str(m2)}.png'), wrapShift)
 
 
 if __name__ == "__main__":
