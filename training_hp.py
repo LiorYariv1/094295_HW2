@@ -194,10 +194,8 @@ if __name__=='__main__':
     all_images = []
     images_by_letter ={}
     for letter in letter_info.keys():
-        print(f'line197: letter={letter}')
         original_size = letter_info[letter]['num_orig'] + len(letter_info[letter]['flipped']) #orig+flipped size
         total_letter_list = (letter_info[letter]['orig']+letter_info[letter]['flipped']).copy()
-        print(f'line200: size of total_letter_list: {len(total_letter_list)}')
         gan_num = int((train_c_size-original_size)*args.gan_pct)
         gan_num = min(gan_num, len(letter_info[letter]['gan']))
         gan_sample = random.sample(letter_info[letter]['gan'], gan_num)
@@ -214,12 +212,15 @@ if __name__=='__main__':
         images_by_letter[letter] = total_letter_list
         total_letter_list = [f'{letter_dir}/{x}' for x in total_letter_list]
         letter_path = f'{train_dir_tmp}/{letter}'
-        print(f'line216: letter_path={letter_path}')
         os.makedirs(letter_path, exist_ok=True)
         for image in total_letter_list:
             shutil.copy(image,letter_path)
         train_images += total_letter_list
-        print(f'number of images for letter {letter}:',len(total_letter_list))
+        print(f'number of total images for letter {letter}:',len(total_letter_list))
+        print(f'number of orig+flipped images for letter {letter}:',original_size)
+        print(f'number of gan images for letter {letter}:',gan_num)
+        print(f'number of shift images for letter {letter}:',train_c_size-gan_num-original_size)
+
 
     with open(f'{wandb.run.dir}/images_by_letter', 'wb') as file:
          pickle.dump(images_by_letter,file)
