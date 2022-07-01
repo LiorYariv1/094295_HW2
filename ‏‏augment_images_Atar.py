@@ -110,6 +110,8 @@ if __name__ == "__main__":
 
     path = 'data/train'
     for digit in LETTERS:
+        if digit!='vii':
+            continue
         print('shifting digit ',digit)
         files_list = letters_info[digit]['orig']+letters_info[digit]['flipped']
         augment_digit(digit,path,files_list)
