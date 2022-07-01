@@ -199,6 +199,7 @@ if __name__=='__main__':
         total_letter_list = (letter_info[letter]['orig']+letter_info[letter]['flipped']).copy()
         print(f'line200: size of total_letter_list: {len(total_letter_list)}')
         gan_num = int((train_c_size-original_size)*args.gan_pct)
+        gan_num = min(gan_num, len(letter_info[letter]['gan']))
         gan_sample = random.sample(letter_info[letter]['gan'], gan_num)
         # flip_num = int((train_c_size-original_size)*args.flipped_pct)
         # flip_sample = random.sample(letter_info['flipped'], flip_num)
