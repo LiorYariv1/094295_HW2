@@ -32,14 +32,14 @@ def augment_digit(cur_digit, path, files_list):
 
             # print('Rotated Image')
             # apply rotate operation
-            max_rotate = 8
+            max_rotate = 12
             ang = np.random.uniform(low=-max_rotate, high=max_rotate, size=(1)).astype(float)[0]
             # print(f'ang {ang}')
             rotated = rotate(image, angle=ang, mode='wrap')
 
             # apply shift operation
             for m1, m2 in [(1,1),(1,-1),(-1,1),(-1,-1)]:
-                max_shift = 3.6
+                max_shift = 5
                 up_high = max(0, m1*max_shift)
                 up_low = min(0, m1*max_shift)
                 up = np.random.uniform(low=up_low, high=up_high, size=(1)).astype(float)[0]
@@ -49,7 +49,7 @@ def augment_digit(cur_digit, path, files_list):
                 # print(f'up {up},  left {left}')
                 transform = AffineTransform(translation=(up, left))
                 wrapShift = warp(rotated, transform, mode='wrap')
-                plt.imsave(os.path.join(dest_path, image_name.split('.png')[0] + f'_shift_{str(m1),str(m2)}.png'), wrapShift)
+                plt.imsave(os.path.join(dest_path, image_name.split('.png')[0] + f'_shift_{m1}{m2}.png'), wrapShift)
     # for image_name in os.listdir(source_path):
     #     if '.png' in image_name:
     #         image_path = os.path.join(source_path,image_name)
@@ -90,6 +90,9 @@ if __name__ == "__main__":
     letters_info = {}
     train_path = 'data/train'
     for letter in LETTERS:
+        if letter!='vii':
+            continue
+        print(letter)
         letter_info = {'num_orig': 0, 'orig': [], 'flipped': [], 'gan': [], 'shift': []}
         all_images = os.listdir(f'{train_path}/{letter}')
         for image in all_images:
