@@ -194,8 +194,10 @@ if __name__=='__main__':
     all_images = []
     images_by_letter ={}
     for letter in letter_info.keys():
+        print(f'line197: letter={letter}')
         original_size = letter_info[letter]['num_orig'] + len(letter_info[letter]['flipped']) #orig+flipped size
         total_letter_list = (letter_info[letter]['orig']+letter_info[letter]['flipped']).copy()
+        print(f'line200: size of total_letter_list: {len(total_letter_list)}')
         gan_num = int((train_c_size-original_size)*args.gan_pct)
         gan_sample = random.sample(letter_info[letter]['gan'], gan_num)
         # flip_num = int((train_c_size-original_size)*args.flipped_pct)
@@ -211,6 +213,7 @@ if __name__=='__main__':
         images_by_letter[letter] = total_letter_list
         total_letter_list = [f'{letter_dir}/{x}' for x in total_letter_list]
         letter_path = f'{train_dir_tmp}/{letter}'
+        print(f'line216: letter_path={letter_path}')
         os.makedirs(letter_path, exist_ok=True)
         for image in total_letter_list:
             shutil.copy(image,letter_path)
@@ -224,7 +227,7 @@ if __name__=='__main__':
         data_transforms = transforms.Compose([transforms.Resize([64, 64]), transforms.ToTensor()])
 
 
-        train_dataset= datasets.ImageFolder(train_dir_tmp, data_transforms)
+        train_dataset = datasets.ImageFolder(train_dir_tmp, data_transforms)
         val_dataset = datasets.ImageFolder(val_dir, data_transforms)
 
         class_names = train_dataset.classes
