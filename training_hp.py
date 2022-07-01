@@ -124,10 +124,10 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_siz
                         optimizer.step()
 
                 # statistics
-                print("################################################")
-                print(f'running_loss={running_loss}')
-                print(f'inputs.size(0)={inputs.size(0)}')
-                print(f'loss.item()={loss.item()}')
+                # print("################################################")
+                # print(f'running_loss={running_loss}')
+                # print(f'inputs.size(0)={inputs.size(0)}')
+                # print(f'loss.item()={loss.item()}')
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += torch.sum(preds == labels.data)
             if phase == 'train':
@@ -220,74 +220,74 @@ if __name__=='__main__':
         train_images += total_letter_list
         print(f'number of images for letter {letter}:',len(total_letter_list))
 
-        with open(f'{wandb.run.dir}/images_by_letter', 'wb') as file:
-             pickle.dump(images_by_letter,file)
+    with open(f'{wandb.run.dir}/images_by_letter', 'wb') as file:
+         pickle.dump(images_by_letter,file)
 
-        # Resize the samples and transform them into tensors
-        data_transforms = transforms.Compose([transforms.Resize([64, 64]), transforms.ToTensor()])
+    # Resize the samples and transform them into tensors
+    data_transforms = transforms.Compose([transforms.Resize([64, 64]), transforms.ToTensor()])
 
 
-        train_dataset = datasets.ImageFolder(train_dir_tmp, data_transforms)
-        val_dataset = datasets.ImageFolder(val_dir, data_transforms)
+    train_dataset = datasets.ImageFolder(train_dir_tmp, data_transforms)
+    val_dataset = datasets.ImageFolder(val_dir, data_transforms)
 
-        class_names = train_dataset.classes
-        print("The classes are: ", class_names)
+    class_names = train_dataset.classes
+    print("The classes are: ", class_names)
 
-        # Dataloaders initialization
-        train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
-        val_dataloader = torch.utils.data.DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True)
+    # Dataloaders initialization
+    train_dataloader = torch.utils.data.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
+    val_dataloader = torch.utils.data.DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=True)
 
-        # for i in range(3):
-        #     inputs, classes = next(iter(train_dataloader))
-        #     out = torchvision.utils.make_grid(inputs)
-        #     imshow(out, title=[class_names[x] for x in classes])
+    # for i in range(3):
+    #     inputs, classes = next(iter(train_dataloader))
+    #     out = torchvision.utils.make_grid(inputs)
+    #     imshow(out, title=[class_names[x] for x in classes])
 
-        device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-        print('device: ', device)
-        dataloaders = {'train': train_dataloader, 'val': val_dataloader}
-        dataset_sizes = {'train': len(train_dataset), 'val': len(val_dataset)}
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    print('device: ', device)
+    dataloaders = {'train': train_dataloader, 'val': val_dataloader}
+    dataset_sizes = {'train': len(train_dataset), 'val': len(val_dataset)}
 
-        NUM_CLASSES = len(class_names)
+    NUM_CLASSES = len(class_names)
 
-        # Use a prebuilt pytorch's ResNet50 model
-        model_ft = models.resnet50(pretrained=False)
+    # Use a prebuilt pytorch's ResNet50 model
+    model_ft = models.resnet50(pretrained=False)
 
-        # Fit the last layer for our specific task
-        num_ftrs = model_ft.fc.in_features
-        model_ft.fc = nn.Linear(num_ftrs, NUM_CLASSES)
+    # Fit the last layer for our specific task
+    num_ftrs = model_ft.fc.in_features
+    model_ft.fc = nn.Linear(num_ftrs, NUM_CLASSES)
 
-        model_ft = model_ft.to(device)
+    model_ft = model_ft.to(device)
 
-        criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss()
 
-        optimizer_ft = optim.Adam(model_ft.parameters(), lr=LR)
+    optimizer_ft = optim.Adam(model_ft.parameters(), lr=LR)
 
-        # Decay LR by a factor of 0.1 every 5 epochs
-        exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=5, gamma=0.1)
+    # Decay LR by a factor of 0.1 every 5 epochs
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=5, gamma=0.1)
 
-        # Train the model
-        model_ft, loss_dict, acc_dict = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataloaders,
-                                                    dataset_sizes, num_epochs=NUM_EPOCHS)
+    # Train the model
+    model_ft, loss_dict, acc_dict = train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataloaders,
+                                                dataset_sizes, num_epochs=NUM_EPOCHS)
 
-        # Save the trained model
-        torch.save(model_ft.state_dict(), f'{wandb.run.dir}/trained_model.pt')
-        wandb.finish()
-        shutil.rmtree(train_dir_tmp)
-        # Basic visualizations of the model performance
-        fig = plt.figure(figsize=(20, 10))
-        plt.title("Train - Validation Loss")
-        plt.plot(loss_dict['train'], label='train')
-        plt.plot(loss_dict['val'], label='validation')
-        plt.xlabel('num_epochs', fontsize=12)
-        plt.ylabel('loss', fontsize=12)
-        plt.legend(loc='best')
-        plt.savefig('train_val_loss_plot.png')
+    # Save the trained model
+    torch.save(model_ft.state_dict(), f'{wandb.run.dir}/trained_model.pt')
+    wandb.finish()
+    shutil.rmtree(train_dir_tmp)
+    # Basic visualizations of the model performance
+    fig = plt.figure(figsize=(20, 10))
+    plt.title("Train - Validation Loss")
+    plt.plot(loss_dict['train'], label='train')
+    plt.plot(loss_dict['val'], label='validation')
+    plt.xlabel('num_epochs', fontsize=12)
+    plt.ylabel('loss', fontsize=12)
+    plt.legend(loc='best')
+    plt.savefig('train_val_loss_plot.png')
 
-        fig = plt.figure(figsize=(20, 10))
-        plt.title("Train - Validation ACC")
-        plt.plot(acc_dict['train'], label='train')
-        plt.plot(acc_dict['val'], label='validation')
-        plt.xlabel('num_epochs', fontsize=12)
-        plt.ylabel('ACC', fontsize=12)
-        plt.legend(loc='best')
-        plt.savefig('train_val_acc_plot.png')
+    fig = plt.figure(figsize=(20, 10))
+    plt.title("Train - Validation ACC")
+    plt.plot(acc_dict['train'], label='train')
+    plt.plot(acc_dict['val'], label='validation')
+    plt.xlabel('num_epochs', fontsize=12)
+    plt.ylabel('ACC', fontsize=12)
+    plt.legend(loc='best')
+    plt.savefig('train_val_acc_plot.png')
