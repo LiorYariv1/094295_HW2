@@ -24,7 +24,7 @@ def augment_digit(cur_digit, path, files_list):
     dest = cur_digit
     source_path = os.path.join(path,cur_digit)
     dest_path = os.path.join(path,dest)
-    for image_path in files_list:
+    for image_name in files_list:
         if '.png' in image_name:
             image_path = os.path.join(source_path,image_name)
             # image = Image.open(image_path)
@@ -85,6 +85,7 @@ if __name__ == "__main__":
     #     print('shifting digit ',digit)
     #     augment_digit(digit,path)
 
+    print("start building lists")
     LETTERS = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'x', 'ix']
     letters_info = {}
     train_path = 'data/train'
@@ -102,6 +103,7 @@ if __name__ == "__main__":
                 letter_info['orig'].append(image)
         letter_info['num_orig'] = len(letter_info['orig'])
         letters_info[letter] = letter_info
+    print("lists done")
 
     path = 'data/train'
     for digit in LETTERS:
