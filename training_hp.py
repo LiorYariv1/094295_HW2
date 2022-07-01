@@ -187,6 +187,7 @@ if __name__=='__main__':
     wandb.config.update(args)
     train_c_size = args.train_c_size*50
     train_images = []
+    all_images = []
     images_by_letter ={}
     for letter in letter_info.keys():
         original_size = letter_info[letter]['num_orig'] + len(letter_info[letter]['flipped']) #orig+flipped size
