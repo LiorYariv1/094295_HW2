@@ -190,7 +190,7 @@ if __name__=='__main__':
     images_by_letter ={}
     for letter in letter_info.keys():
         original_size = letter_info[letter]['num_orig'] + len(letter_info[letter]['flipped']) #orig+flipped size
-        total_letter_list = (letter_info['orig']+letter_info['flipped']).copy()
+        total_letter_list = (letter_info[letter]['orig']+letter_info[letter]['flipped']).copy()
         gan_num = int((train_c_size-original_size)*args.gan_pct)
         gan_sample = random.sample(letter_info['gan'], gan_num)
         # flip_num = int((train_c_size-original_size)*args.flipped_pct)
