@@ -124,6 +124,10 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_siz
                         optimizer.step()
 
                 # statistics
+                print("################################################")
+                print(f'running_loss={running_loss}')
+                print(f'loss.item()={loss.item()}')
+                print(f'inputs.size(0)={inputs.size(0)}')
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += torch.sum(preds == labels.data)
             if phase == 'train':
