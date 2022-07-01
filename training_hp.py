@@ -181,35 +181,36 @@ if __name__=='__main__':
     # logger.info(args)
     with open('letters_info.pkl', 'rb') as file:
         letter_info = pickle.load(file)
-    for combination in ['orig+shift','orig+gan','orig+flipped','orig+shift+flipped','orig+shift+gan','orig+gan+flipped']: #orig
-        types = combination.split('+')
-        wandb.init(project=args.project, entity="labteam",mode=args.wandb_mode, name=combination) #logging to wandb
-        wandb.config.update(args)
-        train_images = []
-        images_by_letter ={}
-        for letter in letter_info.keys():
-            # original_size = letter_info[letter]['num_orig']
-            # total_letter_list = letter_info['orig'].copy()
-            # gan_num = int((950-original_size)*args.gan_pct)
-            # gan_sample = random.sample(letter_info['gan'], gan_num)
-            # flip_num = int((950-original_size)*args.flipped_pct)
-            # flip_sample = random.sample(letter_info['flipped'], flip_num)
-            # shift_sample = random.sample(letter_info['shift'], 950-gan_num-flip_num-original_size)
-            # total_letter_list = total_letter_list+gan_sample+flip_sample+shift_sample
-            # all_images += total_letter_list
-            # images_by_letter[letter] = total_letter_list
-            total_letter_list = []
-            for t in types:
-                total_letter_list += letter_info[letter][t]#+letter_info[letter]['shift']
-            letter_dir = f'{train_dir}/{letter}'
-            images_by_letter[letter] = total_letter_list
-            total_letter_list = [f'{letter_dir}/{x}' for x in total_letter_list]
-            letter_path = f'{train_dir_tmp}/{letter}'
-            os.makedirs(letter_path, exist_ok=True)
-            for image in total_letter_list:
-                shutil.copy(image,letter_path)
-            train_images += total_letter_list
-            print(f'number of images for letter {letter}:',len(total_letter_list))
+
+
+    wandb.init(project=args.project, entity="labteam",mode=args.wandb_mode) #logging to wandb
+    wandb.config.update(args)
+    train_c_size = args.train_c_size*50
+    train_images = []
+    images_by_letter ={}
+    for letter in letter_info.keys():
+        original_size = letter_info[letter]['num_orig'] + len(letter_info[letter]['flipped']) #orig+flipped size
+        total_letter_list = (letter_info['orig']+letter_info['flipped']).copy()
+        gan_num = int((train_c_size-original_size)*args.gan_pct)
+        gan_sample = random.sample(letter_info['gan'], gan_num)
+        # flip_num = int((train_c_size-original_size)*args.flipped_pct)
+        # flip_sample = random.sample(letter_info['flipped'], flip_num)
+        shift_sample = random.sample(letter_info['shift'], train_c_size-gan_num-original_size)
+        total_letter_list = total_letter_list+gan_sample+shift_sample
+        all_images += total_letter_list
+        images_by_letter[letter] = total_letter_list
+        # total_letter_list = []
+        # for t in types:
+        #     total_letter_list += letter_info[letter][t]#+letter_info[letter]['shift']
+        letter_dir = f'{train_dir}/{letter}'
+        images_by_letter[letter] = total_letter_list
+        total_letter_list = [f'{letter_dir}/{x}' for x in total_letter_list]
+        letter_path = f'{train_dir_tmp}/{letter}'
+        os.makedirs(letter_path, exist_ok=True)
+        for image in total_letter_list:
+            shutil.copy(image,letter_path)
+        train_images += total_letter_list
+        print(f'number of images for letter {letter}:',len(total_letter_list))
 
         with open(f'{wandb.run.dir}/images_by_letter', 'wb') as file:
              pickle.dump(images_by_letter,file)
