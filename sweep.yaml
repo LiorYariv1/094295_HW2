@@ -7,10 +7,10 @@ parameters:
     distribution: uniform
     max: 1.0
     min: 0.0
-  flip_pct:
-    distribution: uniform
-    max: 1.0
-    min: 0.0
+  train_c_size:
+    distribution: int_uniform
+    max: 18
+    min: 12
 program: training_hp.py
 project: Lab2
 

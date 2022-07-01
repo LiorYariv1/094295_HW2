@@ -29,15 +29,11 @@ def parsing():
     parser.add_argument('--project', default="Lab2", type=str)
 
     parser.add_argument('--gan_pct', default=0.33, type=float)
-    parser.add_argument('--flip_pct', default=0.33, type=float)
+    parser.add_argument('--train_c_size', default=18, type=int)
     # parser.add_argument('--shift_pct', default=0.33, type=float)
 
     args = parser.parse_args()
     return args
-
-print("Your working directory is: ", os.getcwd())
-torch.manual_seed(0)
-logger = logging.getLogger(__name__)
 
 # ======================================================
 # ======================================================
@@ -53,34 +49,25 @@ logger = logging.getLogger(__name__)
 # ======================================================
 # ======================================================
 
-# Training hyperparameters
-BATCH_SIZE = 16
-NUM_EPOCHS = 100
-LR = 0.001
-
-# Paths to your train and val directories
-train_dir = os.path.join("data", "train")
-val_dir = os.path.join("data", "val")
-train_dir_tmp = os.path.join("data", "train_tmp")
 
 
-class ImageDataSet(Dataset):
-    def __init__(self, images_files, transform=None):
-        self.image_files =images_files
-        self.transform = transform
-        self.class_to_idx={'i': 0, 'ii': 1, 'iii': 2, 'iv': 3, 'ix': 4, 'v': 5, 'vi': 6, 'vii': 7, 'viii': 8, 'x': 9}
-        self.classes = ['i', 'ii', 'iii', 'iv', 'ix', 'v', 'vi', 'vii', 'viii', 'x']
-    def __len__(self):
-        # Here, we need to return the number of samples in this dataset.
-        return len(self.image_files)
-
-    def __getitem__(self, index):
-        file_path = self.image_files[index]
-        image = Image.open(file_path)
-        image = image.convert('RGB')
-        transformed_image = self.transform(image)
-        label = self.class_to_idx[file_path.split("/")[-2]]
-        return transformed_image, label
+# class ImageDataSet(Dataset):
+#     def __init__(self, images_files, transform=None):
+#         self.image_files =images_files
+#         self.transform = transform
+#         self.class_to_idx={'i': 0, 'ii': 1, 'iii': 2, 'iv': 3, 'ix': 4, 'v': 5, 'vi': 6, 'vii': 7, 'viii': 8, 'x': 9}
+#         self.classes = ['i', 'ii', 'iii', 'iv', 'ix', 'v', 'vi', 'vii', 'viii', 'x']
+#     def __len__(self):
+#         # Here, we need to return the number of samples in this dataset.
+#         return len(self.image_files)
+#
+#     def __getitem__(self, index):
+#         file_path = self.image_files[index]
+#         image = Image.open(file_path)
+#         image = image.convert('RGB')
+#         transformed_image = self.transform(image)
+#         label = self.class_to_idx[file_path.split("/")[-2]]
+#         return transformed_image, label
 
 
 def imshow(inp, title=None):
@@ -173,6 +160,21 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_siz
 
 
 if __name__=='__main__':
+    # Training hyperparameters
+
+    print("Your working directory is: ", os.getcwd())
+    torch.manual_seed(0)
+    logger = logging.getLogger(__name__)
+
+    BATCH_SIZE = 16
+    NUM_EPOCHS = 100
+    LR = 0.001
+
+    # Paths to your train and val directories
+    train_dir = os.path.join("data", "train")
+    val_dir = os.path.join("data", "val")
+    train_dir_tmp = os.path.join("data", "train_tmp")
+
     args = parsing()
     # random.seed(42)
     # args.shift_pct = 1-args.gan_pct - args.flip_pct
