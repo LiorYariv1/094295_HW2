@@ -91,8 +91,8 @@ if __name__ == "__main__":
     letters_info = {}
     train_path = 'data/train'
     for letter in LETTERS:
-        if letter!='vii':
-            continue
+        # if letter!='vii':
+        #     continue
         print(letter)
         letter_info = {'num_orig': 0, 'orig': [], 'flipped': [], 'gan': [], 'shift': []}
         all_images = os.listdir(f'{train_path}/{letter}')
@@ -111,7 +111,7 @@ if __name__ == "__main__":
 
     path = 'data/train'
     for digit in LETTERS:
-        if digit!='vii':
+        if digit=='vii':
             continue
         print('shifting digit ',digit)
         files_list = letters_info[digit]['orig']+letters_info[digit]['flipped']
