@@ -49,7 +49,7 @@ def augment_digit(cur_digit, path, files_list):
 
                 newim = torchvision.transforms.functional.affine(im, angle=ang, translate=[up, left], scale=scl,
                                                                    shear=[shr], fillcolor=255)
-                newim.save(os.path.join(dest_path, image_name.split('.png')[0] + f'_shift_{m1}{m2}.png'))
+                newim.save(os.path.join(dest_path, image_name.split('.png')[0] + f'_shift_{m1}{m2}_2.png'))
 
     # for image_name in os.listdir(source_path):
     #     if '.png' in image_name:
@@ -91,8 +91,8 @@ if __name__ == "__main__":
     letters_info = {}
     train_path = 'data/train'
     for letter in LETTERS:
-        # if letter!='vii':
-        #     continue
+        if letter!='vii':
+            continue
         print(letter)
         letter_info = {'num_orig': 0, 'orig': [], 'flipped': [], 'gan': [], 'shift': []}
         all_images = os.listdir(f'{train_path}/{letter}')
@@ -111,7 +111,7 @@ if __name__ == "__main__":
 
     path = 'data/train'
     for digit in LETTERS:
-        if digit=='vii':
+        if digit!='vii':
             continue
         print('shifting digit ',digit)
         files_list = letters_info[digit]['orig']+letters_info[digit]['flipped']
