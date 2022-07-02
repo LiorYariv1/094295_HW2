@@ -26,4 +26,5 @@ if __name__ == "__main__":
     df = pd.read_csv('new_fixes.csv')
     # os.mkdir('data_noaug/maybe')
     for _, row in df.iterrows():
-        rearrange(row['path'][2:].replace('data','data_noaug'), row['img'],row['dest'][2:].replace('data','data_noaug'))
+        print(row)
+        # rearrange(row['path'][2:].replace('data','data_noaug'), row['img'],row['dest'][2:].replace('data','data_noaug'))
