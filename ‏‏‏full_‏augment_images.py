@@ -23,7 +23,7 @@ Numeric_to_Roman = {v:k for k,v in Roman_to_Numeric.items()}
 def augment_digit(cur_digit, path, files_list):
     dest = cur_digit
     source_path = os.path.join(path,cur_digit)
-    dest_path = os.path.join(path,dest)
+    dest_path = os.path.join('atarTry',dest)
     for image_name in files_list:
         if '.png' in image_name:
             image_path = os.path.join(source_path,image_name)
@@ -109,8 +109,8 @@ if __name__ == "__main__":
         letters_info[letter] = letter_info
     print("lists done")
 
-    # path = 'data/train'
-    path = 'atarTry'
+    path = 'data/train'
+    # path = 'atarTry'
     for digit in LETTERS:
         if digit!='vii':
             continue
