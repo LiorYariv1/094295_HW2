@@ -22,6 +22,7 @@ if __name__ == "__main__":
     print("start building lists")
     LETTERS = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'x', 'ix']
     letters_info = {}
+    # train_path = 'data/train'
     train_path = 'data/train'
     for letter in LETTERS:
         if letter!='vii':
@@ -42,10 +43,11 @@ if __name__ == "__main__":
         letters_info[letter] = letter_info
     print("lists done")
 
-    path = 'atarTry'
+    path = 'data/train'
     for digit in LETTERS:
-        if digit!='vii':
-            continue
+        # if digit!='vii':
+        #     continue
+        counter=0
         print('moving digit ',digit)
         files_list = letters_info[digit]['shift']
         dest = digit
@@ -53,7 +55,9 @@ if __name__ == "__main__":
         dest_path = os.path.join('oldfiles', dest)
         for image_name in files_list:
             image_path = os.path.join(source_path, image_name)
-            dest_path = os.path.join(dest_path, image_name)
-            shutil.move(f"{image_path}.foo", f"{dest_path}.foo")
+            # dest_path = os.path.join(dest_path, image_name)
+            shutil.move(image_path, dest_path)
+            counter+=1
+        print(f"{counter} images of digit {digit} were moved to {dest_path}\n")
 
 
