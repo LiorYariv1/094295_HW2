@@ -187,9 +187,10 @@ if __name__=='__main__':
         letter_info = pickle.load(file)
 
 
-    wandb.init(project=args.project, entity="labteam",mode=args.wandb_mode) #logging to wandb
+    wandb.init(project=args.project, entity="labteam",mode=args.wandb_mode, name="orig_newShifts") #logging to wandb
     wandb.config.update(args)
     train_c_size = args.train_c_size*50
+    train_c_size = 810 #*************************************************************
     train_images = []
     all_images = []
     images_by_letter ={}
@@ -197,6 +198,7 @@ if __name__=='__main__':
         original_size = letter_info[letter]['num_orig'] + len(letter_info[letter]['flipped']) #orig+flipped size
         total_letter_list = (letter_info[letter]['orig']+letter_info[letter]['flipped']).copy()
         gan_num = int((train_c_size-original_size)*args.gan_pct)
+        gan_num = 0 #*******************************************************************
         gan_num = min(gan_num, len(letter_info[letter]['gan']))
         gan_sample = random.sample(letter_info[letter]['gan'], gan_num)
         # flip_num = int((train_c_size-original_size)*args.flipped_pct)
