@@ -46,10 +46,10 @@ if __name__ == "__main__":
     for digit in LETTERS:
         if digit!='vii':
             continue
-        print('shifting digit ',digit)
-        files_list = letters_info[digit]['orig']+letters_info[digit]['flipped']
-        dest = cur_digit
-        source_path = os.path.join(path, cur_digit)
+        print('moving digit ',digit)
+        files_list = letters_info[digit]['shift']
+        dest = digit
+        source_path = os.path.join(path, digit)
         dest_path = os.path.join('oldfiles', dest)
         for image_name in files_list:
             image_path = os.path.join(source_path, image_name)
