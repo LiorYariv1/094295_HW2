@@ -34,15 +34,15 @@ def augment_digit(cur_digit, path, files_list):
             translate_random_var = [5, 25]
             angle_random_var = [-10, 10]
             scale_random_var = [0.91, 1]
-            shear_random_var = [-3, 3]
+            shear_random_var = [-5, 5]
 
             # apply shift operation
             for m1, m2 in [(1,1),(1,-1),(-1,1),(-1,-1)]:
 
-                tmp = np.random.uniform(low=0, high=1, size=(1)).astype(float)[0]
-                if tmp>0.23:
-                    continue
-                tmp_count+=1
+                # tmp = np.random.uniform(low=0, high=1, size=(1)).astype(float)[0]
+                # if tmp>0.23:
+                #     continue
+                # tmp_count+=1
 
                 up_high = max(m1 * translate_random_var[0], m1 * translate_random_var[1])
                 up_low = min(m1 * translate_random_var[0], m1 * translate_random_var[1])
@@ -99,8 +99,8 @@ if __name__ == "__main__":
     letters_info = {}
     train_path = 'data/train'
     for letter in LETTERS:
-        if letter!='vii' and letter!='viii':
-            continue
+        # if letter!='vii' and letter!='viii':
+        #     continue
         print(letter)
         letter_info = {'num_orig': 0, 'orig': [], 'flipped': [], 'gan': [], 'shift': []}
         all_images = os.listdir(f'{train_path}/{letter}')
@@ -119,8 +119,8 @@ if __name__ == "__main__":
 
     path = 'data/train'
     for digit in LETTERS:
-        if digit!='vii' and digit!='viii':
-            continue
+        # if digit!='vii' and digit!='viii':
+        #     continue
         print('shifting digit ',digit)
         files_list = letters_info[digit]['orig']+letters_info[digit]['flipped']
         augment_digit(digit,path,files_list)
