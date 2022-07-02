@@ -110,7 +110,7 @@ if __name__ == "__main__":
     print("lists done")
 
     # path = 'data/train'
-    path = 'atar_augments_try'
+    path = 'atarTry'
     for digit in LETTERS:
         if digit!='vii':
             continue
