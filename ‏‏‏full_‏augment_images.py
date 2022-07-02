@@ -24,6 +24,7 @@ def augment_digit(cur_digit, path, files_list):
     dest = cur_digit
     source_path = os.path.join(path,cur_digit)
     dest_path = os.path.join(path,dest)
+    tmp_count=0
     for image_name in files_list:
         if '.png' in image_name:
             image_path = os.path.join(source_path,image_name)
@@ -33,10 +34,16 @@ def augment_digit(cur_digit, path, files_list):
             translate_random_var = [5, 25]
             angle_random_var = [-10, 10]
             scale_random_var = [0.91, 1]
-            shear_random_var = [-5, 5]
+            shear_random_var = [-3, 3]
 
             # apply shift operation
             for m1, m2 in [(1,1),(1,-1),(-1,1),(-1,-1)]:
+
+                tmp = np.random.uniform(low=0, high=1, size=(1)).astype(float)[0]
+                if tmp>0.35:
+                    continue
+                tmp_count+=1
+                
                 up_high = max(m1 * translate_random_var[0], m1 * translate_random_var[1])
                 up_low = min(m1 * translate_random_var[0], m1 * translate_random_var[1])
                 up = np.random.uniform(low=up_low, high=up_high, size=(1)).astype(float)[0]
@@ -50,6 +57,7 @@ def augment_digit(cur_digit, path, files_list):
                 newim = torchvision.transforms.functional.affine(im, angle=ang, translate=[up, left], scale=scl,
                                                                    shear=[shr], fillcolor=255)
                 newim.save(os.path.join(dest_path, image_name.split('.png')[0] + f'_shift_{m1}{m2}_2.png'))
+            print(f'tmp_count={tmp_count}')
 
     # for image_name in os.listdir(source_path):
     #     if '.png' in image_name:
@@ -91,7 +99,7 @@ if __name__ == "__main__":
     letters_info = {}
     train_path = 'data/train'
     for letter in LETTERS:
-        if letter!='vii':
+        if letter!='viii':
             continue
         print(letter)
         letter_info = {'num_orig': 0, 'orig': [], 'flipped': [], 'gan': [], 'shift': []}
@@ -111,7 +119,7 @@ if __name__ == "__main__":
 
     path = 'data/train'
     for digit in LETTERS:
-        if digit!='vii':
+        if digit!='viii':
             continue
         print('shifting digit ',digit)
         files_list = letters_info[digit]['orig']+letters_info[digit]['flipped']
