@@ -25,8 +25,8 @@ if __name__ == "__main__":
     # train_path = 'data/train'
     train_path = 'data/train'
     for letter in LETTERS:
-        if letter!='vii':
-            continue
+        # if letter!='vii':
+        #     continue
         print(letter)
         letter_info = {'num_orig': 0, 'orig': [], 'flipped': [], 'gan': [], 'shift': []}
         all_images = os.listdir(f'{train_path}/{letter}')
