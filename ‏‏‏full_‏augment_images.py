@@ -39,10 +39,10 @@ def augment_digit(cur_digit, path, files_list):
             # apply shift operation
             for m1, m2 in [(1,1),(1,-1),(-1,1),(-1,-1)]:
 
-                # tmp = np.random.uniform(low=0, high=1, size=(1)).astype(float)[0]
-                # if tmp>0.23:
-                #     continue
-                # tmp_count+=1
+                tmp = np.random.uniform(low=0, high=1, size=(1)).astype(float)[0]
+                if tmp>0.16:
+                    continue
+                tmp_count+=1
 
                 up_high = max(m1 * translate_random_var[0], m1 * translate_random_var[1])
                 up_low = min(m1 * translate_random_var[0], m1 * translate_random_var[1])
@@ -99,7 +99,7 @@ if __name__ == "__main__":
     letters_info = {}
     train_path = 'data/train'
     for letter in LETTERS:
-        # if letter!='vii' and letter!='viii':
+        # if letter!='viii':
         #     continue
         print(letter)
         letter_info = {'num_orig': 0, 'orig': [], 'flipped': [], 'gan': [], 'shift': []}
