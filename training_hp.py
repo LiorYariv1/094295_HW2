@@ -167,7 +167,6 @@ if __name__=='__main__':
     # Training hyperparameters
 
     print("Your working directory is: ", os.getcwd())
-    torch.manual_seed(0)
     logger = logging.getLogger(__name__)
 
     BATCH_SIZE = 16
@@ -187,7 +186,7 @@ if __name__=='__main__':
         letter_info = pickle.load(file)
 
 
-    wandb.init(project=args.project, entity="labteam",mode=args.wandb_mode) #logging to wandb
+    wandb.init(project=args.project, entity="labteam",mode=args.wandb_mode, ) #logging to wandb
     wandb.config.update(args)
     train_c_size = args.train_c_size*50
     train_images = []
@@ -228,6 +227,7 @@ if __name__=='__main__':
     # Resize the samples and transform them into tensors
     data_transforms = transforms.Compose([transforms.Resize([64, 64]), transforms.ToTensor()])
 
+    torch.manual_seed(0)
 
     train_dataset = datasets.ImageFolder(train_dir_tmp, data_transforms)
     val_dataset = datasets.ImageFolder(val_dir, data_transforms)
