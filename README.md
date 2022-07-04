@@ -8,7 +8,7 @@
 5. fixes.csv
 
 ## Augmentation Files:
-1.Flip - FlipImages.py <br>
+1. Flip - FlipImages.py <br>
 2. Shift Augmentation - full_augment_images.py <br>
 3. Gan: <br>
   - gan.py
@@ -19,4 +19,4 @@
 ## HPT Files:
 1. training_hp.py
 2. sweep.yaml
-3.pickles_for_hp.py
+3. pickles_for_hp.py
