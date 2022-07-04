@@ -3,8 +3,6 @@ import torchvision
 from torchvision import models, transforms, datasets
 import matplotlib.pyplot as plt
 from PIL import Image
-
-# importing all the required libraries
 import warnings
 warnings.filterwarnings('ignore')
 import numpy as np
@@ -24,7 +22,6 @@ def augment_digit(cur_digit, path, files_list):
     dest = cur_digit
     source_path = os.path.join(path,cur_digit)
     dest_path = os.path.join(path,dest)
-    tmp_count=0
     for image_name in files_list:
         if '.png' in image_name:
             image_path = os.path.join(source_path,image_name)
@@ -36,13 +33,8 @@ def augment_digit(cur_digit, path, files_list):
             scale_random_var = [0.91, 1]
             shear_random_var = [-5, 5]
 
-            # apply shift operation
+            # apply operations
             for m1, m2 in [(1,1),(1,-1),(-1,1),(-1,-1)]:
-
-                tmp = np.random.uniform(low=0, high=1, size=(1)).astype(float)[0]
-                if tmp>0.16:
-                    continue
-                tmp_count+=1
 
                 up_high = max(m1 * translate_random_var[0], m1 * translate_random_var[1])
                 up_low = min(m1 * translate_random_var[0], m1 * translate_random_var[1])
@@ -57,50 +49,15 @@ def augment_digit(cur_digit, path, files_list):
                 newim = torchvision.transforms.functional.affine(im, angle=ang, translate=[up, left], scale=scl,
                                                                    shear=[shr], fillcolor=255)
                 newim.save(os.path.join(dest_path, image_name.split('.png')[0] + f'_shift_{m1}{m2}_3.png'))
-    print(f'tmp_count={tmp_count}')
-
-    # for image_name in os.listdir(source_path):
-    #     if '.png' in image_name:
-    #         image_path = os.path.join(source_path,image_name)
-    #         # image = Image.open(image_path)
-    #         image = io.imread(image_path) # reading the image using its path
-    #
-    #         # print('Rotated Image')
-    #         # apply rotate operation
-    #         max_rotate = 10
-    #         ang = np.random.uniform(low=-max_rotate, high=max_rotate, size=(1)).astype(float)[0]
-    #         # print(f'ang {ang}')
-    #         rotated = rotate(image, angle=ang, mode='wrap')
-    #
-    #         # apply shift operation
-    #         for m1, m2 in [(1,1),(1,-1),(-1,1),(-1,-1)]:
-    #             max_shift = 3.6
-    #             up_high = max(0, m1*max_shift)
-    #             up_low = min(0, m1*max_shift)
-    #             up = np.random.uniform(low=up_low, high=up_high, size=(1)).astype(float)[0]
-    #             left_high = max(0, m2*max_shift)
-    #             left_low = min(0, m2*max_shift)
-    #             left = np.random.uniform(low=left_low, high=left_high, size=(1)).astype(float)[0]
-    #             # print(f'up {up},  left {left}')
-    #             transform = AffineTransform(translation=(up, left))
-    #             wrapShift = warp(rotated, transform, mode='wrap')
-    #             plt.imsave(os.path.join(dest_path, image_name.split('.png')[0] + f'_shift_{str(m1),str(m2)}.png'), wrapShift)
 
 
 if __name__ == "__main__":
     DIGITS = ['i','ii','iii','iv','v','vi','x', 'vii', 'viii', 'ix']
-    # path = 'data/train'
-    # for digit in DIGITS:
-    #     print('shifting digit ',digit)
-    #     augment_digit(digit,path)
-
     print("start building lists")
     LETTERS = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'x', 'ix']
     letters_info = {}
     train_path = 'data/train'
     for letter in LETTERS:
-        # if letter!='viii':
-        #     continue
         print(letter)
         letter_info = {'num_orig': 0, 'orig': [], 'flipped': [], 'gan': [], 'shift': []}
         all_images = os.listdir(f'{train_path}/{letter}')
@@ -119,8 +76,6 @@ if __name__ == "__main__":
 
     path = 'data/train'
     for digit in LETTERS:
-        # if digit!='vii' and digit!='viii':
-        #     continue
         print('shifting digit ',digit)
         files_list = letters_info[digit]['orig']+letters_info[digit]['flipped']
         augment_digit(digit,path,files_list)

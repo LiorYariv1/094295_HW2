@@ -46,12 +46,6 @@ if __name__ == "__main__":
     df = pd.read_csv('new_fixes.csv')
     # os.mkdir('data_noaug/maybe')
     for _, row in df.iterrows():
-        # print(row['path'])
-        # print(f"row['path'][2:] {row['path'][2:]}")
-        # print(f"row['path'][2:].replace('data','data_noaug') {row['path'][2:].replace('data','data_noaug')}")
-        # print(row['dest'])
-        # print(f"row['dest'][2:].replace('data','data_noaug') {row['dest'][2:].replace('data','data_noaug')}")
-        # print(row['path'][2:],"\n", row['img'],"\n", row['dest'][2:],"\n", row['exact']"\n")
         rearrange(row['path'][2:], row['img'], row['dest'][2:], row['exact'])
     #
     #print(os.listdir('data/val/x'))
