@@ -1,4 +1,11 @@
 import unittest
+
+
+"""
+This code and GAN implementation is based on an HW assignment in course 236781 - Deep Learning on Computational Accelerators.
+We have implemented these classes as part of the course. 
+"""
+
 import os
 import sys
 sys.path.append('/home/student/HW2')
