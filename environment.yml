@@ -172,4 +172,6 @@ dependencies:
     - yarl==1.7.2
     - zipp==3.8.0
     - wandb==0.12.16
+    - scikit-image==0.19.3
+
 
