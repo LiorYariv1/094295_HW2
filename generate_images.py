@@ -6,7 +6,9 @@ import cs236781.plot as plot
 from PIL import Image
 from torchvision.utils import save_image
 
-
+"""
+This code load trained GAN models and generate images from these models
+"""
 LETTERS = ['i','ii','iii','iv','v','vi','vii','viii','x','ix']
 best_z_dim = [112,128,256,112,112,256,112,256,112,112]
 root= '/home/student/HW2/checkpoints/'

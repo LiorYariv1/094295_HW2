@@ -1,4 +1,11 @@
 import unittest
+
+
+"""
+This code and GAN implementation is based on an HW assignment in course 236781 - Deep Learning on Computational Accelerators.
+We have implemented these classes as part of the course. 
+"""
+
 import os
 import sys
 sys.path.append('/home/student/HW2')
@@ -18,7 +25,6 @@ import cs236781.plot as plot
 from PIL import Image
 from torchvision.utils import save_image
 
-
 # Optimizer
 def create_optimizer(model_params, opt_params):
     opt_params = opt_params.copy()
@@ -26,12 +32,9 @@ def create_optimizer(model_params, opt_params):
     opt_params.pop('type')
     return optim.__dict__[optimizer_type](model_params, **opt_params)
 
-
-
 # Loss
 def dsc_loss_fn(y_data, y_generated):
     return gan.discriminator_loss_fn(y_data, y_generated, hp['data_label'], hp['label_noise'])
-
 
 def gen_loss_fn(y_generated):
     return gan.generator_loss_fn(y_generated, hp['data_label'])
@@ -81,9 +84,8 @@ def train_gan(LETTER,hp):
     gen_optimizer = create_optimizer(gen.parameters(), hp['generator_optimizer'])
 
     #%%
-
     # Training
-    checkpoint_file = f'checkpoints/gan_z_dim_{hp["z_dim"]}/{LETTER}/'
+    checkpoint_file = f'checkpoints/new_gan/{LETTER}/'
     os.makedirs(checkpoint_file,exist_ok=True)
     checkpoint_file_final = f'{checkpoint_file}_final'
     if os.path.isfile(f'{checkpoint_file}.pt'):
@@ -118,30 +120,28 @@ def train_gan(LETTER,hp):
                 best_model = epoch_idx
                 print(f'Saved checkpoint.')
 
-            samples = gen.sample(5, with_grad=False)
-            fig, _ = plot.tensors_as_images(samples.cpu(), figsize=(6, 2))
-            fig.suptitle(f'Letter {LETTER} Epoch number {epoch_idx}')
-            plt.show()
+            # samples = gen.sample(5, with_grad=False)
+            # fig, _ = plot.tensors_as_images(samples.cpu(), figsize=(6, 2))
+            # fig.suptitle(f'Letter {LETTER} Epoch number {epoch_idx}')
+            # plt.show()
     except KeyboardInterrupt as e:
         print('\n *** Training interrupted by user')
 
     ## CODE TO GENERATE AND SAVE IMAGES from best model
 
-    number_of_images = 100
+    number_of_images = 300
     print(f'*** Loading final checkpoint file from epoch {best_model}')
     gen = torch.load(f'{checkpoint_file}{best_model}.pt', map_location=device, )
     samples = gen.sample(number_of_images, with_grad=False)
 
-    images_path = f'Images_try3_zdim{hp["z_dim"]}/{LETTER}'
+    images_path = f'Images_new_gan/{LETTER}'
     os.makedirs(images_path)
     for i,sample in enumerate(samples):
         save_image(sample, f'{images_path}/img{i}.png')
 
 
-
-
 if __name__=='__main__':
-    z_dim = 256
+    z_dim = 112
     hp = dict(
     batch_size=4,
     z_dim=z_dim,
@@ -161,11 +161,9 @@ if __name__=='__main__':
     ),
     )
 
-    # for letter in ['iii','iv','vi','ii','i','v','vii','viii','xi','x']:
-    #     if letter in ['iii']:
-    #         continue
-    #     if letter=='vi':
-    #         hp['batch_size']=5
-    letter = 'viii'
-    print('Letter: ',letter)
-    train_gan(LETTER=letter,hp=hp)
+
+    for letter in ['iii','iv','vi','ii','i','v','vii','viii','xi','x']:
+        if letter=='vi':
+            hp['batch_size']=5
+        print('Letter: ',letter)
+        train_gan(LETTER=letter,hp=hp)
