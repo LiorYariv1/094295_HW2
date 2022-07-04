@@ -40,10 +40,9 @@ def parsing():
 # ======================================================
 # ======================================================
 
-# You are not allowed to change anything in this file.
-# This file is meant only for training and saving the model.
-# You may use it for basic inspection of the model performance.
-
+# This code is based on run_train_eval.py we got in this assignment
+# We added arguments and WandB log in order to train multiple models
+# and conduct an hyper parameter tune.
 # ======================================================
 # ======================================================
 # ======================================================
@@ -80,12 +79,13 @@ def imshow(inp, title=None):
     plt.pause(0.001)
 
 
-def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_sizes, num_epochs=100):
+def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_sizes, num_epochs=45):
     """Responsible for running the training and validation phases for the requested model."""
     since = time.time()
-
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
+    best_epoch=0
+    best_train_acc = 0.0
     loss_dict = {'train': [], 'val': []}
     acc_dict = {'train': [], 'val': []}
 
@@ -147,15 +147,17 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_siz
             # deep copy the model
             if phase == 'val' and epoch_acc > best_acc:
                 best_acc = epoch_acc
+                best_epoch=epoch
+                best_train_acc = acc_dict['train'][-1]
                 best_model_wts = copy.deepcopy(model.state_dict())
+                wandb.log({f'best_val_acc': best_acc, 'best_epoch': best_epoch,'best_train_acc':best_train_acc})  # log best results
 
-        print()
 
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(
         time_elapsed // 60, time_elapsed % 60))
     print('Best val Acc: {:4f}'.format(best_acc))
-    wandb.log({f'best_val_acc': best_acc,'time':f'{time_elapsed // 60}:{time_elapsed % 60}'})  # log best results
+    wandb.log({f'best_val_acc': best_acc,'best_epoch':best_epoch,'time':f'{time_elapsed // 60}:{time_elapsed % 60}'})  # log best results
 
     # load best model weights
     model.load_state_dict(best_model_wts)
@@ -165,18 +167,21 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, dataset_siz
 
 if __name__=='__main__':
     # Training hyperparameters
-
+    print('New Ver 2 ')
     print("Your working directory is: ", os.getcwd())
     logger = logging.getLogger(__name__)
 
     BATCH_SIZE = 16
     NUM_EPOCHS = 100
     LR = 0.001
+    print('Num Epochs: ',NUM_EPOCHS )
 
     # Paths to your train and val directories
     train_dir = os.path.join("data", "train")
     val_dir = os.path.join("data", "val")
     train_dir_tmp = os.path.join("data", "train_tmp")
+    if 'train_tmp' in os.listdir('data'):
+        shutil.rmtree(train_dir_tmp)
 
     args = parsing()
     # random.seed(42)

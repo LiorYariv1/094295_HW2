@@ -156,9 +156,7 @@ if __name__=='__main__':
 
 
     for letter in ['iii','iv','vi','ii','i','v','vii','viii','xi','x']:
-        if letter in ['iii']:
-            continue
         if letter=='vi':
             hp['batch_size']=5
-    print('Letter: ',letter)
-    train_gan(LETTER=letter,hp=hp)
+        print('Letter: ',letter)
+        train_gan(LETTER=letter,hp=hp)
