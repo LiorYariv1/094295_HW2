@@ -8,9 +8,9 @@
 5. fixes.csv
 
 ## Augmentation Files:
-1.Flip - FlipImages.py
-2. Shift Augmentation - full_augment_images.py
-3. Gan:
+1.Flip - FlipImages.py <br>
+2. Shift Augmentation - full_augment_images.py <br>
+3. Gan: <br>
   - gan.py
   - train_gan.py
   -generate_images.py
